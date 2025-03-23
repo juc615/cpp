@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+// 구구단 문제 출제 함수
+void playGugudanOnce() {
+    int num1 = rand() % 9 + 1;  // 1~9 사이의 랜덤 숫자
+    int num2 = rand() % 9 + 1;  // 1~9 사이의 랜덤 숫자
+    int correct_answer = num1 * num2;
+
+    cout << num1 << " × " << num2 << " = ?" << endl;
+    int user_answer;
+    cout << "정답을 입력하세요: ";
+    cin >> user_answer;
+
+    if (user_answer == correct_answer) {
+        cout << "정답입니다! 🎉" << endl;
+    } else {
+        cout << "틀렸습니다. 정답은 " << correct_answer << "입니다. ❌" << endl;
+    }
+}
+
+// 두 자리 수 곱셈 문제 출제 함수
+void playMultiplicationOnce() {
+    int num1 = rand() % 90 + 10; // 10~99 사이의 랜덤 숫자
+    int num2 = rand() % 90 + 10; // 10~99 사이의 랜덤 숫자
+    int correct_answer = num1 * num2;
+
+    cout << num1 << " × " << num2 << " = ?" << endl;
+    int user_answer;
+    cout << "정답을 입력하세요: ";
+    cin >> user_answer;
+
+    if (user_answer == correct_answer) {
+        cout << "정답입니다! 🎉" << endl;
+    } else {
+        cout << "틀렸습니다. 정답은 " << correct_answer << "입니다. ❌" << endl;
+    }
+}
+
+// n자리 덧셈 문제 출제 함수 (n은 3~9)
+void playAdditionOnce(int digits) {
+    int num1 = rand() % (int)pow(10, digits - 1) + (int)pow(10, digits - 2);
+    int num2 = rand() % (int)pow(10, digits - 1) + (int)pow(10, digits - 2);
+    int correct_answer = num1 + num2;
+
+    cout << num1 << " + " << num2 << " = ?" << endl;
+    int user_answer;
+    cout << "정답을 입력하세요: ";
+    cin >> user_answer;
+
+    if (user_answer == correct_answer) {
+        cout << "정답입니다! 🎉" << endl;
+    } else {
+        cout << "틀렸습니다. 정답은 " << correct_answer << "입니다. ❌" << endl;
+    }
+}
+
+int main() {
+    srand(time(0));  // 랜덤 시드 설정
+    int choice;
+
+    while (true) {
+        // 게임 선택 메뉴 출력
+        cout << "\n===== 게임 선택 =====" << endl;
+        cout << "1: 구구단 문제" << endl;
+        cout << "2: 두 자리 수 곱셈 문제" << endl;
+        cout << "3~9: 해당 자리 수의 덧셈 문제" << endl;
+        cout << "0: 종료" << endl;
+        cout << "번호를 선택하세요: ";
+        cin >> choice;
+
+        if (choice == 0) {
+            cout << "게임을 종료합니다. 👋" << endl;
+            break;
+        } else if (choice == 1) {
+            playGugudanOnce();
+        } else if (choice == 2) {
+            playMultiplicationOnce();
+        } else if (choice >= 3 && choice <= 9) {
+            playAdditionOnce(choice);
+        } else {
+            cout << "잘못된 입력입니다. 다시 선택하세요. ❌" << endl;
+        }
+    }
+
+    return 0;
+}
