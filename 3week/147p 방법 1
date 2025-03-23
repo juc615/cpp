@@ -11,7 +11,7 @@ int main()
     int reversedNum = reverse(num); 
     printf("Reversed: %d\n", reversedNum);  
 
-    return 0;  // 정상 종료
+    return 0; 
 }
 
 
