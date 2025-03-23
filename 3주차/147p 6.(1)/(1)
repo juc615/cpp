@@ -1,0 +1,31 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+void playMultiplicationOnce() {
+    srand(time(0)); // 랜덤 시드 설정
+
+    int num1 = rand() % 90 + 10; // 10~99 사이의 숫자 (두 자리 수)
+    int num2 = rand() % 90 + 10; // 10~99 사이의 숫자 (두 자리 수)
+
+    int correct_answer = num1 * num2; // 정답 계산
+
+    cout << num1 << " × " << num2 << " = ?" << endl;
+
+    int user_answer;
+    cout << "정답을 입력하세요: ";
+    cin >> user_answer;
+
+    if (user_answer == correct_answer) {
+        cout << "정답입니다! 🎉" << endl;
+    } else {
+        cout << "틀렸습니다. 정답은 " << correct_answer << "입니다. ❌" << endl;
+    }
+}
+
+int main() {
+    playMultiplicationOnce();
+    return 0;
+}
