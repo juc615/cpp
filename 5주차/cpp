@@ -1,0 +1,143 @@
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <windows.h>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+const string UNOPENED = "□";
+const string MINE = "*";
+
+// 방향 벡터: 상하좌우 + 대각선
+int dx[] = { -1, -1, -1, 0, 1, 1, 1, 0 };
+int dy[] = { -1, 0, 1, 1, 1, 0, -1, -1 };
+
+// 콘솔 UTF-8 출력 설정
+void setupConsole() {
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+}
+
+// 맵 출력 함수
+void printMap(const vector<vector<string>>& display) {
+    int height = display.size();
+    int width = display[0].size();
+
+    cout << "\n   ";
+    for (int j = 0; j < width; ++j)
+        cout << setw(3) << j;
+    cout << endl;
+
+    for (int i = 0; i < height; ++i) {
+        cout << setw(3) << i;
+        for (int j = 0; j < width; ++j)
+            cout << setw(3) << display[i][j];
+        cout << endl;
+    }
+}
+
+// 지뢰 주변 개수 세기
+int countAdjacentMines(int x, int y, const vector<vector<string>>& map) {
+    int count = 0;
+    int height = map.size();
+    int width = map[0].size();
+
+    for (int d = 0; d < 8; ++d) {
+        int nx = x + dx[d];
+        int ny = y + dy[d];
+        if (nx >= 0 && nx < height && ny >= 0 && ny < width) {
+            if (map[nx][ny] == MINE)
+                count++;
+        }
+    }
+    return count;
+}
+
+// 지뢰 배치
+void placeMines(vector<vector<string>>& map, int numMines) {
+    int height = map.size();
+    int width = map[0].size();
+    srand((unsigned int)time(0));
+
+    int placed = 0;
+    while (placed < numMines) {
+        int x = rand() % height;
+        int y = rand() % width;
+        if (map[x][y] != MINE) {
+            map[x][y] = MINE;
+            placed++;
+        }
+    }
+}
+
+int main() {
+    setupConsole();
+
+    int width, height, numMines;
+    cout << "지뢰맵의 가로 크기(최대 80): ";
+    cin >> width;
+    cout << "지뢰맵의 세로 크기(최대 40): ";
+    cin >> height;
+    cout << "매설할 지뢰의 개수: ";
+    cin >> numMines;
+
+    cout << "\n설정 완료! " << width << "x" << height << " 맵에 지뢰 " << numMines << "개를 매설합니다.\n";
+
+    // 맵 초기화
+    vector<vector<string>> map(height, vector<string>(width, " "));
+    vector<vector<string>> display(height, vector<string>(width, UNOPENED));
+    vector<vector<bool>> opened(height, vector<bool>(width, false));
+
+    placeMines(map, numMines);
+
+    // 숫자 채우기
+    for (int i = 0; i < height; ++i)
+        for (int j = 0; j < width; ++j)
+            if (map[i][j] != MINE)
+                map[i][j] = to_string(countAdjacentMines(i, j, map));
+
+    int safeCells = width * height - numMines;
+    int openedCount = 0;
+
+    while (true) {
+        printMap(display);
+        cout << "\n열 좌표와 행 좌표를 입력하세요 (예: 1 3): ";
+        int x, y;
+        cin >> y >> x;
+
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            cout << "❗ 잘못된 좌표입니다. 다시 입력하세요.\n";
+            continue;
+        }
+
+        if (opened[y][x]) {
+            cout << "⚠️ 이미 열린 칸입니다.\n";
+            continue;
+        }
+
+        opened[y][x] = true;
+
+        if (map[y][x] == MINE) {
+            cout << "\n💥 지뢰를 밟았습니다! 게임 오버!\n";
+            for (int i = 0; i < height; ++i)
+                for (int j = 0; j < width; ++j)
+                    if (map[i][j] == MINE)
+                        display[i][j] = MINE;
+            printMap(display);
+            break;
+        } else {
+            display[y][x] = map[y][x];
+            openedCount++;
+            if (openedCount == safeCells) {
+                cout << "\n🎉 모든 안전한 칸을 열었습니다! 승리!\n";
+                printMap(display);
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
