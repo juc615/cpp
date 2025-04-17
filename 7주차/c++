@@ -1,0 +1,43 @@
+#include <iostream>
+#include <locale.h> // 로케일 설정을 위한 헤더
+
+using namespace std;
+
+class MyTime {
+    int hour, minute, second, millisecond;
+
+public:
+    // 기본 생성자
+    MyTime() : hour(0), minute(0), second(0), millisecond(0) {
+        cout << "[초기화 리스트 사용 - 기본 생성자 호출됨]" << endl;
+    }
+
+    // 매개변수 생성자
+    MyTime(int h, int m, int s, int ms)
+        : hour(h), minute(m), second(s), millisecond(ms) {
+        cout << "[초기화 리스트 사용 - 매개변수 생성자 호출됨]" << endl;
+    }
+
+    // 초기화 리스트 미사용 - static 함수 제공
+    static MyTime createWithoutInitListDefault() {
+        MyTime t;
+        t.hour = 0;
+        t.minute = 0;
+        t.second = 0;
+        t.millisecond = 0;
+        cout << "[초기화 리스트를 사용하지 않음 - 기본 생성자 호출됨]" << endl;
+        return t;
+    }
+};
+
+int main() {
+    // 콘솔에서 한글이 제대로 출력되도록 로케일 설정
+    setlocale(LC_ALL, "Korean"); // 또는 "ko_KR.utf8" (시스템에 따라 다름)
+
+    // 객체 생성 테스트
+    MyTime t1;                                      // 기본 생성자
+    MyTime t2(10, 20, 30, 40);                      // 매개변수 생성자
+    MyTime t3 = MyTime::createWithoutInitListDefault(); // static 방식 생성자
+
+    return 0;
+}
